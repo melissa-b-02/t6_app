@@ -1,6 +1,6 @@
 <template>
   <div class="dashboard-container">
-    <h1>Willkommen im Dashboard 🎉</h1>
+    <h1>Willkommen im Dashboard </h1>
     <p>Hier siehst du deine gespeicherten Inhalte.</p>
 
     <!-- Platzhalter für zukünftige Inhalte -->
