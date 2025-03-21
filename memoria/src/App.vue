@@ -1,27 +1,37 @@
 <template>
-  <div>
-    <HeaderApp v-if="showHeaderFooter" />
-    <div class="container mt-4">
-      <router-view />
-    </div>
-    <FooterApp v-if="showHeaderFooter" />
+  <div id="app">
+    <!-- Header nur auf Login/Register -->
+    <HeaderApp v-if="showHeader" />
+
+    <!-- Seiteninhalt -->
+    <router-view />
+
+    <!-- Footer wird auf bestimmten Seiten versteckt -->
+    <FooterApp v-if="!hideFooter" />
   </div>
 </template>
 
 <script setup>
-import { computed } from "vue";
 import { useRoute } from "vue-router";
+import { computed } from "vue";
 import HeaderApp from "@/components/HeaderApp.vue";
 import FooterApp from "@/components/FooterApp.vue";
 
 const route = useRoute();
 
-// Header & Footer nur anzeigen, wenn NICHT auf der WelcomePage
-const showHeaderFooter = computed(() => route.path !== "/");
+// Footer ausblenden auf: Login, Register, WelcomePage ("/")
+const hideFooter = computed(() => {
+  return (
+    route.path === "/login" || route.path === "/register" || route.path === "/"
+  );
+});
+
+// Header nur auf Login und Register anzeigen (nicht auf WelcomePage)
+const showHeader = computed(() => {
+  return route.path === "/login" || route.path === "/register";
+});
 </script>
 
 <style>
-body {
-  margin-bottom: 60px; /* Falls Bottom Navigation verwendet wird */
-}
+/* Falls du zusätzliches Styling brauchst */
 </style>

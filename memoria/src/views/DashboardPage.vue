@@ -1,27 +1,26 @@
 <template>
   <div class="dashboard-container">
-    <h1>Willkommen im Dashboard </h1>
-    <p>Hier siehst du deine gespeicherten Inhalte.</p>
-
-    <!-- Platzhalter für zukünftige Inhalte -->
-    <div class="content-placeholder">
-      <p>📌 Deine gespeicherten Erinnerungen werden hier angezeigt.</p>
+    <div class="text-center mb-4">
+      <img
+        src="../assets/memoria_logo.png"
+        alt="Logo von Memoria"
+        class="align-content-center"
+      />
     </div>
+    <h2>Dein persönliches <span>Fotobuch</span></h2>
+    <p>
+      Mit Memoria erstellst du dein persönliches Fotobuch – einfach, organisiert
+      und voller Erinnerungen. Lade Bilder hoch, ergänze deine wertvollen mit
+      Infos und Gedanken, damit diese nie verloren gehen.
+    </p>
   </div>
 </template>
 
-<script setup></script>
-
 <style scoped>
 .dashboard-container {
-  text-align: center;
   padding: 50px;
 }
-
-.content-placeholder {
-  margin-top: 20px;
-  padding: 20px;
-  background: #f8f9fa;
-  border-radius: 10px;
+span {
+  color: var(--main-color);
 }
 </style>

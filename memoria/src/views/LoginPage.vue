@@ -1,3 +1,22 @@
+<template>
+  <div class="auth-form text-center">
+    <h1 class="log-reg">Anmelden</h1>
+    <p v-if="user">Willkommen, {{ username }}</p>
+    <form @submit.prevent="login">
+      <input v-model="email" type="email" placeholder="E-Mail" required />
+      <input
+        v-model="password"
+        type="password"
+        placeholder="Passwort"
+        required
+      />
+      <button class="btn">Login</button>
+    </form>
+    <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
+    <router-link to="/register">Noch kein Konto? Hier registrieren</router-link>
+  </div>
+</template>
+
 <script setup>
 import { ref, watchEffect } from "vue";
 import { auth } from "@/firebaseConfig";
@@ -11,9 +30,8 @@ const router = useRouter();
 const email = ref("");
 const password = ref("");
 const errorMessage = ref("");
-const username = ref(""); // 🔥 username wird jetzt verwendet!
+const username = ref("");
 
-// 🔥 Falls der User eingeloggt ist, Namen setzen
 watchEffect(() => {
   if (user.value) {
     username.value = user.value.displayName || "Gast";
@@ -21,7 +39,7 @@ watchEffect(() => {
 });
 
 if (user.value) {
-  router.push("/dashboard"); // Falls User eingeloggt ist → Dashboard
+  router.push("/dashboard");
 }
 
 const login = async () => {
@@ -33,22 +51,3 @@ const login = async () => {
   }
 };
 </script>
-
-<template>
-  <div class="login-container">
-    <h1>Anmelden</h1>
-    <p v-if="user">Willkommen, {{ username }}</p>
-    <form @submit.prevent="login">
-      <input v-model="email" type="email" placeholder="E-Mail" required />
-      <input
-        v-model="password"
-        type="password"
-        placeholder="Passwort"
-        required
-      />
-      <button class="btn btn-primary">Login</button>
-    </form>
-    <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
-    <router-link to="/register">Noch kein Konto? Registrieren</router-link>
-  </div>
-</template>

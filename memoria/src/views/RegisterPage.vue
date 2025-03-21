@@ -1,40 +1,57 @@
 <template>
-  <div class="register-container">
-    <h1>Registrieren</h1>
+  <div class="auth-form text-center">
+    <h1 class="log-reg">Registrieren</h1>
     <form @submit.prevent="register">
-      <input
-        v-model="username"
-        type="text"
-        placeholder="Benutzername"
-        required
-      />
       <input v-model="email" type="email" placeholder="E-Mail" required />
+
       <input
         v-model="password"
         type="password"
         placeholder="Passwort"
         required
       />
-      <button class="btn btn-success">Konto erstellen</button>
+      <input
+        v-model="confirmPassword"
+        type="password"
+        placeholder="Passwort wiederholen"
+        required
+      />
+
+      <p v-if="passwordMismatch" class="error">
+        Die Passwörter stimmen nicht überein!
+      </p>
+
+      <button class="btn" :disabled="passwordMismatch">Konto erstellen</button>
     </form>
+
     <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
     <router-link to="/login">Bereits registriert? Einloggen</router-link>
   </div>
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { auth } from "@/firebaseConfig";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { useRouter } from "vue-router";
 
-const username = ref("");
 const email = ref("");
 const password = ref("");
+const confirmPassword = ref("");
 const errorMessage = ref("");
 const router = useRouter();
 
+// 🔹 Prüft, ob die Passwörter übereinstimmen
+const passwordMismatch = computed(
+  () => password.value !== confirmPassword.value
+);
+
 const register = async () => {
+  if (passwordMismatch.value) {
+    errorMessage.value = "Die Passwörter stimmen nicht überein!";
+    return;
+  }
+
   try {
     const userCredential = await createUserWithEmailAndPassword(
       auth,
@@ -51,25 +68,48 @@ const register = async () => {
 </script>
 
 <style scoped>
-.register-container {
-  text-align: center;
-  padding: 50px;
+.auth-form {
+  width: 90%;
+  max-width: 400px;
+  margin: 0 auto;
+  background: #fff;
+  padding: 1.5rem;
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
 }
 
 input {
-  display: block;
-  width: 80%;
-  margin: 10px auto;
+  width: 100%;
   padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 1rem;
 }
 
-button {
-  width: 80%;
-  padding: 10px;
+.btn {
+  width: 100%;
+  padding: 12px;
+  font-size: 1rem;
+  background: #b20b13;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.3s ease-in-out;
+}
+
+.btn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+.btn:hover:not(:disabled) {
+  background: #8f0a0f;
 }
 
 .error {
   color: red;
-  margin-top: 10px;
+  font-size: 0.9rem;
 }
 </style>
