@@ -1,9 +1,12 @@
 <template>
   <div class="gallery-container overflow-auto">
     <h1>Fotogalerie</h1>
+
+    <input v-model="searchQuery" placeholder="Suchen..." class="search-input"/>
+
     <div class="image-grid">
       <div
-        v-for="image in images"
+        v-for="image in filteredImages"
         :key="image.id"
         class="image-card"
         @click="openModal(image)"
@@ -74,7 +77,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, computed, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { db, storage } from "@/firebaseConfig";
 import { collection, getDocs, doc, deleteDoc } from "firebase/firestore";
@@ -84,6 +87,7 @@ import bootstrap from "bootstrap/dist/js/bootstrap.bundle.min.js";
 const router = useRouter();
 const images = ref([]);
 const selectedImage = ref({});
+const searchQuery = ref("");
 
 // 🔹 Daten aus Firestore laden
 onMounted(async () => {
@@ -92,6 +96,15 @@ onMounted(async () => {
     id: doc.id,
     ...doc.data(),
   }));
+});
+
+const filteredImages = computed(() => {
+  if (!searchQuery.value) return images.value;
+  return images.value.filter(image => 
+    image.title.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+    image.location?.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+    (image.tags && image.tags.some(tag => tag.toLowerCase().includes(searchQuery.value.toLowerCase())))
+  );
 });
 
 const openModal = (image) => {
@@ -149,6 +162,13 @@ const deleteImage = async () => {
   padding: 20px;
   overflow-y: scroll;
   padding-bottom: 120px;
+}
+
+.search-input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 20px;
+  font-size: 16px;
 }
 
 /* Grid für 2 Bilder pro Zeile */
