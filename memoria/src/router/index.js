@@ -29,8 +29,11 @@ const router = VueRouter.createRouter({
 
 router.beforeEach((to, from, next) => {
   const auth = getAuth();
+  const publicPages = ["/", "/login", "/register"];
+  const requiresAuth = !publicPages.includes(to.path);
+
   onAuthStateChanged(auth, (user) => {
-    if (to.path === "/dashboard" && !user) {
+    if (requiresAuth && !user) {
       next("/login");
     } else {
       next();

@@ -5,7 +5,8 @@
       <input
         v-model="searchQuery"
         placeholder="Suche..."
-        class="form-control flex-grow-1"/>
+        class="form-control flex-grow-1"
+      />
       <button class="btn" @click="toggleDateFilter">
         <i class="bi bi-calendar"></i>
       </button>
@@ -36,7 +37,8 @@
           v-for="image in filteredImagesFiltered"
           :key="image.id"
           class="image-card"
-          @click="openModal(image)">
+          @click="openModal(image)"
+        >
           <img
             :src="image.imageUrl"
             class="gallery-img"

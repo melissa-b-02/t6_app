@@ -92,6 +92,12 @@ if (user.value) {
 const login = async () => {
   if (isLocked.value) return;
 
+  // ✅ Neue Zeile: Prüfe ob offline
+  if (!navigator.onLine) {
+    errorMessage.value = "Du bist offline. Anmeldung ist nicht möglich.";
+    return;
+  }
+
   try {
     await signInWithEmailAndPassword(auth, email.value, password.value);
     localStorage.removeItem("loginAttempts");

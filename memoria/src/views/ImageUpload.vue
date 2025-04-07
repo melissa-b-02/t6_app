@@ -165,5 +165,3 @@ input[type="file"] {
   width: 100%;
 }
 </style>
-
-
