@@ -5,6 +5,7 @@ import RegisterPage from "@/views/RegisterPage.vue";
 import DashboardPage from "@/views/DashboardPage.vue";
 import ImageUpload from "@/views/ImageUpload.vue";
 import PhotoGallery from "@/views/PhotoGallery.vue";
+import ImageInfo from "@/views/ImageInfo.vue";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 const routes = [
@@ -17,7 +18,7 @@ const routes = [
   {
     path: "/image-info",
     name: "ImageInfo",
-    component: () => import("@/views/ImageInfo.vue"),
+    component: ImageInfo,
   },
 ];
 
@@ -26,7 +27,6 @@ const router = VueRouter.createRouter({
   routes,
 });
 
-// Auth-Guard für geschützte Routen
 router.beforeEach((to, from, next) => {
   const auth = getAuth();
   onAuthStateChanged(auth, (user) => {

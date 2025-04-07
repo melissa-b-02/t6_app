@@ -64,13 +64,13 @@ const router = useRouter();
 // Felder für Bild-Infos
 const imageUrl = ref(decodeURIComponent(route.query.imageUrl));
 const title = ref("");
-const date = ref(""); // ⬅️ Hier wird das Datum gespeichert
+const date = ref("");
 const location = ref("");
 const tags = ref("");
 const description = ref("");
 const datepicker = ref(null);
 
-// 🔹 Bereits gespeicherte Infos abrufen und Felder vorfüllen
+// Bereits gespeicherte Infos abrufen und Felder vorfüllen
 onMounted(async () => {
   const imageDocId = route.query.imageId;
   if (imageDocId) {
@@ -79,14 +79,14 @@ onMounted(async () => {
     if (docSnap.exists()) {
       const imageData = docSnap.data();
       title.value = imageData.title || "";
-      date.value = imageData.date || ""; // 🔹 Korrektes Datum setzen
+      date.value = imageData.date || "";
       location.value = imageData.location || "";
       tags.value = imageData.tags ? imageData.tags.join(", ") : "";
       description.value = imageData.description || "";
     }
   }
 
-  // 🔹 Bootstrap Datepicker initialisieren und mit Vue verbinden
+  // Bootstrap Datepicker
   $(datepicker.value)
     .datepicker({
       format: "dd.mm.yyyy",
@@ -95,16 +95,15 @@ onMounted(async () => {
       language: "de",
     })
     .on("changeDate", (e) => {
-      date.value = e.format(); // ⬅️ Datum in Vue speichern
+      date.value = e.format();
     });
 
-  // Falls ein Datum vorhanden ist, setzen wir es im Datepicker
   if (date.value) {
     $(datepicker.value).datepicker("setDate", date.value);
   }
 });
 
-// 🔹 Speichern der neuen Infos
+// Speichern der neuen Infos
 const saveImageInfo = async () => {
   try {
     const imageDocId = route.query.imageId;
@@ -112,7 +111,7 @@ const saveImageInfo = async () => {
 
     await setDoc(imageInfoRef, {
       title: title.value,
-      date: date.value, // 🔹 Datum wird jetzt richtig gespeichert
+      date: date.value,
       location: location.value,
       tags: tags.value.split(",").map((tag) => tag.trim()),
       description: description.value,
@@ -120,7 +119,7 @@ const saveImageInfo = async () => {
     });
 
     alert("Bildinfo gespeichert!");
-    router.push("/gallery"); // Zur Galerie weiterleiten
+    router.push("/gallery");
   } catch (error) {
     console.error("Fehler beim Speichern: ", error);
   }
@@ -185,5 +184,32 @@ const saveImageInfo = async () => {
 
 .btn:hover {
   background-color: #8f0a0f;
+}
+
+@media (min-width: 768px) {
+  .info-container {
+    max-width: 700px;
+    margin: 0 auto;
+  }
+
+  .scroll-container {
+    padding: 2rem;
+  }
+
+  .image-preview {
+    max-width: 300px;
+    display: block;
+    margin: 0 auto 2rem;
+  }
+
+  .form-control {
+    font-size: 1.1rem;
+    padding: 12px;
+  }
+
+  .btn {
+    font-size: 1.1rem;
+    padding: 12px 24px;
+  }
 }
 </style>

@@ -51,7 +51,7 @@ const logout = async () => {
 .task-bar {
   width: 90%;
   background-color: var(--main-bg-color);
-  box-shadow: 4px 10px rgba(0, 0, 0, 0.5);
+  box-shadow: 0px 2px 14px rgba(0, 0, 0, 0.3);
   border-radius: 5em;
   margin-bottom: 1.2em;
 }

@@ -109,7 +109,6 @@ const uploadImage = async () => {
           createdAt: serverTimestamp(),
         });
 
-        // Weiterleitung zu ImageInfo
         router.push({
           name: "ImageInfo",
           query: {
@@ -126,7 +125,6 @@ const uploadImage = async () => {
 </script>
 
 <style scoped>
-/* Gesamtcontainer für Scrollverhalten */
 .upload-page {
   display: flex;
   flex-direction: column;
@@ -134,16 +132,14 @@ const uploadImage = async () => {
   overflow: hidden;
 }
 
-/* Container mit Platz für Taskleiste */
 .upload-container {
   display: flex;
   flex-direction: column;
   flex-grow: 1;
   overflow: hidden;
-  padding-bottom: 80px; /* Stellt sicher, dass nichts hinter der Taskleiste verschwindet */
+  padding-bottom: 80px;
 }
 
-/* Scrollbare Inhalte */
 .scrollable-content {
   flex-grow: 1;
   overflow-y: auto;
@@ -153,12 +149,10 @@ const uploadImage = async () => {
   align-items: center;
 }
 
-/* Dateiauswahl & Kamera */
 input[type="file"] {
   display: none;
 }
 
-/* Bildvorschau */
 .upload-preview {
   width: 100%;
   max-width: 350px;
@@ -167,8 +161,9 @@ input[type="file"] {
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-/* Button Styling */
 .btn {
   width: 100%;
 }
 </style>
+
+

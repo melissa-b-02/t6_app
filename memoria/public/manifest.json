@@ -1,7 +1,7 @@
 {
   "name": "memoria",
   "short_name": "memoria: Bilder, die Erinnerungen bewahren.",
-  "theme_color": "#E8E3DD",
+  "theme_color": "#e8e0d8",
   "icons": [
     {
       "src": "./img/icons/logo-192x192_ver_3.png",
@@ -28,5 +28,5 @@
   ],
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#ffffff"
+  "background_color": "#e8e0d8"
 }

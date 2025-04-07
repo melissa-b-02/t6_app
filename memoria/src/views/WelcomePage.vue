@@ -24,4 +24,11 @@ img {
   width: 100%;
   padding: -1rem;
 }
+@media (min-width: 768px) {
+  img {
+    max-width: 15%;
+    margin: 0 auto;
+    padding-bottom: 15px;
+  }
+}
 </style>

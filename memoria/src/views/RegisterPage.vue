@@ -41,7 +41,7 @@ const confirmPassword = ref("");
 const errorMessage = ref("");
 const router = useRouter();
 
-// 🔹 Prüft, ob die Passwörter übereinstimmen
+// Prüft, ob die Passwörter übereinstimmen
 const passwordMismatch = computed(
   () => password.value !== confirmPassword.value
 );
@@ -51,7 +51,6 @@ const register = async () => {
     errorMessage.value = "Die Passwörter stimmen nicht überein!";
     return;
   }
-
   try {
     const userCredential = await createUserWithEmailAndPassword(
       auth,
