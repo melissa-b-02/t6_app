@@ -1,4 +1,4 @@
-import * as VueRouter from "vue-router"; // Importiere Vue Router als Namespace
+import * as VueRouter from "vue-router";
 import WelcomePage from "@/views/WelcomePage.vue";
 import LoginPage from "@/views/LoginPage.vue";
 import RegisterPage from "@/views/RegisterPage.vue";

@@ -10,7 +10,6 @@ const FILES_TO_CACHE = [
   "/img/placeholder.jpeg",
 ];
 
-// Install: Dateien vorab cachen
 self.addEventListener("install", (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {

@@ -1,24 +1,26 @@
-# memoria
+# Memoria – Dein digitales Fotobuch
 
-## Project setup
-```
-npm install
-```
+**Memoria** ist eine Progressive Web App (PWA), mit der Nutzer persönliche Fotos hochladen, beschriften und organisieren können – ähnlich einem digitalen Polaroid-Fotobuch.
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+Ziel des Projekts war es, eine responsive, installierbare und offlinefähige Web-App mit Vue 3 und Firebase umzusetzen.
 
-### Compiles and minifies for production
-```
-npm run build
-```
+---
+## Features
 
-### Lints and fixes files
-```
-npm run lint
-```
+-  Bild-Upload per Datei oder Kamera
+-  Bilder mit Titel, Ort, Datum, Tags & Beschreibung versehen
+-  Galerie mit Live-Suche und Filterfunktion
+-  Login & Registrierung (Firebase Auth)
+-  PWA-Funktionen: Offline-Modus, Installierbarkeit
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+---
+
+##  Technologien
+
+- **Frontend:** Vue 3, Bootstrap 5
+- **Backend:** Firebase (Auth, Firestore, Storage)
+- **PWA:** `manifest.json` + `service-worker.js` (Offline + Caching)
+
+---
+##### Team
+Lana Klein | Melissa Bartels | Lea Frank | Oliwia Szczerba
