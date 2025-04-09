@@ -9,12 +9,10 @@
         placeholder="Passwort"
         required
       />
-
       <button class="btn" :disabled="isLocked">
         {{ isLocked ? `Gesperrt (${lockTimer}s)` : "Login" }}
       </button>
     </form>
-
     <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
     <router-link to="/register">Noch kein Konto? Hier registrieren</router-link>
   </div>
@@ -91,13 +89,10 @@ if (user.value) {
 
 const login = async () => {
   if (isLocked.value) return;
-
-  // ✅ Neue Zeile: Prüfe ob offline
   if (!navigator.onLine) {
     errorMessage.value = "Du bist offline. Anmeldung ist nicht möglich.";
     return;
   }
-
   try {
     await signInWithEmailAndPassword(auth, email.value, password.value);
     localStorage.removeItem("loginAttempts");
@@ -122,7 +117,6 @@ const login = async () => {
         errorMessage.value =
           "Anmeldung fehlgeschlagen. Bitte erneut versuchen.";
     }
-
     if (attempts.value >= MAX_ATTEMPTS) {
       const lockUntil = Date.now() + LOCK_DURATION * 1000;
       localStorage.setItem("lockUntil", lockUntil.toString());
