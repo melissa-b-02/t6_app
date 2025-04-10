@@ -4,10 +4,9 @@
       <div class="scrollable-content">
         <h1 class="text-center">Bild hochladen</h1>
 
-        <!-- Datei auswählen -->
-        <label for="file-upload" class="btn btn-secondary w-100">
-          Foto auswählen
-        </label>
+        <label for="file-upload" class="btn btn-secondary w-100"
+          >Foto auswählen</label
+        >
         <input
           id="file-upload"
           type="file"
@@ -15,10 +14,9 @@
           @change="previewImage"
         />
 
-        <!-- Kamera öffnen -->
-        <label for="camera-upload" class="btn btn-secondary w-100">
-          Kamera
-        </label>
+        <label for="camera-upload" class="btn btn-secondary w-100"
+          >Kamera</label
+        >
         <input
           id="camera-upload"
           type="file"
@@ -27,7 +25,6 @@
           @change="previewImage"
         />
 
-        <!-- Vorschau Bild -->
         <img
           v-if="imagePreview"
           :src="imagePreview"
@@ -36,7 +33,6 @@
           @error="onImageError"
         />
 
-        <!-- Weiter -->
         <button
           @click="uploadImage"
           class="btn btn w-100 mt-3"
@@ -79,6 +75,10 @@ const previewImage = (event) => {
   }
 };
 
+const onImageError = () => {
+  imagePreview.value = "";
+};
+
 const uploadImage = async () => {
   if (!imageFile.value) {
     uploadError.value = "Bitte wähle ein Bild aus.";
@@ -93,12 +93,12 @@ const uploadImage = async () => {
   }
 
   isUploading.value = true;
+
   const fileName = `${Date.now()}_${imageFile.value.name}`;
-  const storageReference = storageRef(
-    storage,
-    `images/${currentUser.uid}/${fileName}`
-  );
-  const uploadTask = uploadBytesResumable(storageReference, imageFile.value);
+  const filePath = `images/${currentUser.uid}/${fileName}`;
+  const fileRef = storageRef(storage, filePath);
+
+  const uploadTask = uploadBytesResumable(fileRef, imageFile.value);
 
   uploadTask.on(
     "state_changed",
@@ -112,11 +112,10 @@ const uploadImage = async () => {
       isUploading.value = false;
     },
     async () => {
-      const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-      isUploading.value = false;
-
       try {
-        const imageRef = await addDoc(collection(db, "images-infos"), {
+        const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+
+        const docRef = await addDoc(collection(db, "images-infos"), {
           imageUrl: downloadURL,
           createdAt: serverTimestamp(),
           userId: currentUser.uid,
@@ -126,11 +125,13 @@ const uploadImage = async () => {
           name: "ImageInfo",
           query: {
             imageUrl: encodeURIComponent(downloadURL),
-            imageId: imageRef.id,
+            imageId: docRef.id,
           },
         });
       } catch (err) {
         uploadError.value = `Fehler beim Speichern: ${err.message}`;
+      } finally {
+        isUploading.value = false;
       }
     }
   );
