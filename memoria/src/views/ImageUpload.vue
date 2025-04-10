@@ -3,10 +3,11 @@
     <div class="upload-container">
       <div class="scrollable-content">
         <h1 class="text-center">Bild hochladen</h1>
+
         <!-- Datei auswählen -->
-        <label for="file-upload" class="btn btn-secondary w-100"
-          >Foto auswählen</label
-        >
+        <label for="file-upload" class="btn btn-secondary w-100">
+          Foto auswählen
+        </label>
         <input
           id="file-upload"
           type="file"
@@ -15,9 +16,9 @@
         />
 
         <!-- Kamera öffnen -->
-        <label for="camera-upload" class="btn btn-secondary w-100"
-          >Kamera</label
-        >
+        <label for="camera-upload" class="btn btn-secondary w-100">
+          Kamera
+        </label>
         <input
           id="camera-upload"
           type="file"
@@ -26,15 +27,16 @@
           @change="previewImage"
         />
 
-        <!-- Bild Vorschau -->
+        <!-- Vorschau Bild -->
         <img
           v-if="imagePreview"
           :src="imagePreview"
-          alt="Vorschau"
           class="upload-preview"
+          alt="Vorschau"
+          @error="onImageError"
         />
 
-        <!-- Weiter zur Bearbeitung -->
+        <!-- Weiter -->
         <button
           @click="uploadImage"
           class="btn btn w-100 mt-3"
@@ -60,10 +62,11 @@ import {
   getDownloadURL,
 } from "firebase/storage";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
 
 const router = useRouter();
 const imageFile = ref(null);
-const imagePreview = ref(null);
+const imagePreview = ref("");
 const uploadProgress = ref(0);
 const uploadError = ref("");
 const isUploading = ref(false);
@@ -82,9 +85,19 @@ const uploadImage = async () => {
     return;
   }
 
+  const auth = getAuth();
+  const currentUser = auth.currentUser;
+  if (!currentUser) {
+    uploadError.value = "Nicht authentifiziert.";
+    return;
+  }
+
   isUploading.value = true;
   const fileName = `${Date.now()}_${imageFile.value.name}`;
-  const storageReference = storageRef(storage, `images/${fileName}`);
+  const storageReference = storageRef(
+    storage,
+    `images/${currentUser.uid}/${fileName}`
+  );
   const uploadTask = uploadBytesResumable(storageReference, imageFile.value);
 
   uploadTask.on(
@@ -103,10 +116,10 @@ const uploadImage = async () => {
       isUploading.value = false;
 
       try {
-        // Bild-Infos in Firestore speichern
-        const imageRef = await addDoc(collection(db, "images-collection"), {
+        const imageRef = await addDoc(collection(db, "images-infos"), {
           imageUrl: downloadURL,
           createdAt: serverTimestamp(),
+          userId: currentUser.uid,
         });
 
         router.push({
@@ -159,9 +172,6 @@ input[type="file"] {
   object-fit: contain;
   border-radius: 12px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-}
-
-.btn {
-  width: 100%;
+  margin-top: 10px;
 }
 </style>

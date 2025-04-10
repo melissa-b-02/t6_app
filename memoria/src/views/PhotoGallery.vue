@@ -123,8 +123,16 @@
 import { ref, computed, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { db, storage } from "@/firebaseConfig";
-import { collection, getDocs, doc, deleteDoc } from "firebase/firestore";
+import {
+  collection,
+  getDocs,
+  doc,
+  deleteDoc,
+  query,
+  where,
+} from "firebase/firestore";
 import { ref as storageRef, deleteObject } from "firebase/storage";
+import { getAuth } from "firebase/auth";
 import bootstrap from "bootstrap/dist/js/bootstrap.bundle.min.js";
 import $ from "jquery";
 import "bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css";
@@ -158,11 +166,25 @@ const onImageError = (e) => {
 };
 
 onMounted(async () => {
-  const querySnapshot = await getDocs(collection(db, "images-infos"));
-  images.value = querySnapshot.docs.map((doc) => ({
-    id: doc.id,
-    ...doc.data(),
-  }));
+  const user = getAuth().currentUser;
+  if (!user) return;
+
+  const imagesQuery = query(
+    collection(db, "images-infos"),
+    where("userId", "==", user.uid)
+  );
+
+  try {
+    const querySnapshot = await getDocs(imagesQuery);
+    images.value = querySnapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+  } catch (error) {
+    console.error("Fehler beim Laden der Bilder:", error.message);
+    images.value = [];
+  }
+
   loading.value = false;
 
   $("#startDate")
@@ -190,7 +212,7 @@ const filteredImages = computed(() => images.value?.filter(Boolean) || []);
 
 const filteredImagesFiltered = computed(() => {
   const query = searchQuery.value.toLowerCase();
-  return filteredImages.value.filter(Boolean).filter((image) => {
+  return filteredImages.value.filter((image) => {
     const matchText =
       image.title?.toLowerCase().includes(query) ||
       image.location?.toLowerCase().includes(query) ||

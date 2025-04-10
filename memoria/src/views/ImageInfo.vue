@@ -57,6 +57,7 @@ import { doc, getDoc, setDoc } from "firebase/firestore";
 import "bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css";
 import $ from "jquery";
 import "bootstrap-datepicker";
+import { getAuth } from "firebase/auth";
 
 const route = useRoute();
 const router = useRouter();
@@ -108,7 +109,7 @@ const saveImageInfo = async () => {
   try {
     const imageDocId = route.query.imageId;
     const imageInfoRef = doc(db, "images-infos", imageDocId);
-
+    const user = getAuth().currentUser;
     await setDoc(imageInfoRef, {
       title: title.value,
       date: date.value,
@@ -116,6 +117,7 @@ const saveImageInfo = async () => {
       tags: tags.value.split(",").map((tag) => tag.trim()),
       description: description.value,
       imageUrl: imageUrl.value,
+      userId: user.uid,
     });
 
     alert("Bildinfo gespeichert!");
